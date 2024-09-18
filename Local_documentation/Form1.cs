@@ -92,7 +92,7 @@ namespace Local_documentation
                 var docind = new HtmlAgilityPack.HtmlDocument();
                 docind.Load(diryind);
                 var linktopage = docind.DocumentNode.SelectSingleNode("//body/ul");
-                linktopage.AppendChild(HtmlNode.CreateNode("<a href=\"./pages/" + value.Replace(" ", "_") + ".html\"><li>" + value + "</li></a>"));
+                linktopage.AppendChild(HtmlNode.CreateNode("<li><a href=\"./pages/" + value.Replace(" ", "_") + ".html\">" + value + "</a></li>"));
                 FileStream sww = new FileStream(diryind, FileMode.Create);
                 docind.Save(sww);
                 sww.Close();
@@ -121,7 +121,7 @@ namespace Local_documentation
                     if (pagenum % 2 == 0)
                     {
                         htmlBody.AppendChild(HtmlNode.CreateNode("<h3 id=\"i" + ((pagenum / 2) + 1).ToString() + "\">" + tb.Text + "</h3>"));
-                        htmlmenu.AppendChild(HtmlNode.CreateNode("<a href=\"#i" + ((pagenum / 2) + 1).ToString() + "\"><li>" + tb.Text + "</li></a>"));
+                        htmlmenu.AppendChild(HtmlNode.CreateNode("<li><a href=\"#i" + ((pagenum / 2) + 1).ToString() + "\">" + tb.Text + "</a></li>"));
                     }
                     else { htmlBody.AppendChild(HtmlNode.CreateNode("<p id=\"i" + ((pagenum / 2) + 1).ToString() + "c\">" + tb.Text + "</p>")); }
                     pagenum++;
