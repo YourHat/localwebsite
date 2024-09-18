@@ -123,10 +123,10 @@ namespace Local_documentation
                         htmlBody.AppendChild(HtmlNode.CreateNode("<h3 id=\"i" + ((pagenum / 2) + 1).ToString() + "\">" + tb.Text + "</h3>"));
                         htmlmenu.AppendChild(HtmlNode.CreateNode("<li><a href=\"#i" + ((pagenum / 2) + 1).ToString() + "\">" + tb.Text + "</a></li>"));
                     }
-                    else { htmlBody.AppendChild(HtmlNode.CreateNode("<p id=\"i" + ((pagenum / 2) + 1).ToString() + "c\">" + tb.Text + "</p>")); }
+                    else { htmlBody.AppendChild(HtmlNode.CreateNode("<p id=\"i" + ((pagenum / 2) + 1).ToString() + "c\">" + tb.Text.Replace("\r\n", "<br>").Replace("\n", "<br>").Replace("\r", "<br>") + "</p>")); }
                     pagenum++;
                 }
-                FileStream sw = new FileStream(diry + "\\pages\\" + selectedPage.Replace(" ", "_") + ".html", FileMode.Create);
+                FileStream sw = new FileStream(Settings1.Default.folderpath + "\\LD_Website" + "\\pages\\" + selectedPage.Replace(" ", "_") + ".html", FileMode.Create);
                 doc.Save(sw);
                 sw.Close();
             }
@@ -168,11 +168,13 @@ namespace Local_documentation
                     if (i % 2 == 0)
                     {
                         textBoxList[i].Location = new Point(50, 150 * i + 50); textBoxList[i].Width = 500;
+       
                         pageContents.Controls.Add(createdeleteButton(i));
                     }
                     else
                     {
                         textBoxList[i].Multiline = true; textBoxList[i].Height = 200; textBoxList[i].Width = 900;
+                     
                         textBoxList[i].ScrollBars = ScrollBars.Vertical; textBoxList[i].Location = new Point(50, 150 * (i - 1) + 100);
                     }
                     pageContents.Controls.Add(textBoxList[i]);
@@ -381,19 +383,15 @@ namespace Local_documentation
                 return dialogResult;
             }
             if (removeconfirmbox("Dialog Box", "Are you sure you want to remove this item?", selectedPage) == DialogResult.OK) {
-                Debug.WriteLine("could not find itttt");
                 var doc = new HtmlAgilityPack.HtmlDocument();
 
-                Debug.WriteLine("could not find itttttttt");
                 doc.Load(Settings1.Default.folderpath + "\\LD_Website\\index.html");
-                var liNode = doc.DocumentNode.SelectSingleNode("//li[a[@href='./pages/" + selectedPage + ".html']]");
-                Debug.WriteLine("could not find it");
+                var liNode = doc.DocumentNode.SelectSingleNode("//li[a[@href='./pages/" + selectedPage.Replace(" ", "_") + ".html']]");
                 liNode.Remove();
-                Debug.WriteLine("could not find it!");
                 FileStream sww = new FileStream(Settings1.Default.folderpath + "\\LD_Website\\index.html", FileMode.Create);
                 doc.Save(sww);
                 sww.Close();
-                File.Delete(Settings1.Default.folderpath + "\\LD_Website\\pages\\" + selectedPage + ".html");
+                File.Delete(Settings1.Default.folderpath + "\\LD_Website\\pages\\" + selectedPage.Replace(" ", "_") + ".html");
                 pageList.Items.Clear();
                 pageContents.Controls.Clear();
                 startnewform();
