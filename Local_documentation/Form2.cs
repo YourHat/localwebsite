@@ -34,7 +34,7 @@ namespace Local_documentation
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Settings1.Default.title = titletextbox.Text;
+          
             Settings1.Default.themecolor = buttonsdict.Where(x => x.Value.Checked == true).Select(x => x.Key).First();
             Settings1.Default.Save();
             string cssContent = "h1{color:" + Settings1.Default.themecolor + ";font-style: italic;font-size:3em;} h2{color:Black;font-size:2em;} a{text-decoration: none;color:" + Settings1.Default.themecolor + ";} a:hover {font-weight:bold;} li{line-height:1.5em;} p{margin-bottom:50px;margin-left:0px;line-height:2em;color:gray;} *{font-family: Arial, Helvetica, sans-serif;} img{width:700px;}body{margin:30px;} h3 {border-bottom: solid 3px gray;position: relative;margin-bottom:-0.5em;} h3:after {position: absolute;content: \" \";display: block;border-bottom: solid 3px " + Settings1.Default.themecolor + " ;bottom: -3px;width: 10%;}";
@@ -43,7 +43,8 @@ namespace Local_documentation
                 File.WriteAllText(Settings1.Default.folderpath + "\\LD_Website\\design.css", cssContent);
             }
             catch (Exception w) { }
-           
+            
+
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -85,7 +86,7 @@ namespace Local_documentation
             {
                 webtitlelabel.Text = "Could not find a website";
             }
-
+            Settings1.Default.Save();
         }
 
         private void button3_Click(object sender, EventArgs e)

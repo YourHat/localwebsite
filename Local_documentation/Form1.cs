@@ -81,7 +81,7 @@ namespace Local_documentation
                     "<a href=\"..\\index.html\"><h1>" + Settings1.Default.title + "</h1></a><h2 id=\"title\">" + value + "</h2><ul id=\"menu\"></ul>" +
                     "<div id=\"content\"><h3 id=\"i1\">title</h3><p id=\"i1c\">Content</p></div></body></html>");
                 doc.DocumentNode.AppendChild(node);
-                FileStream sw = new FileStream(diry + "\\pages\\" + value.Replace(" ", "_") + ".html", FileMode.Create);
+                FileStream sw = new FileStream(Settings1.Default.folderpath + "\\LD_Website" + "\\pages\\" + value.Replace(" ", "_") + ".html", FileMode.Create);
                 doc.Save(sw);
                 sw.Close();
                 pageList.Items.Add(value);
@@ -150,7 +150,7 @@ namespace Local_documentation
                 // clear the page first
                 pageContents.Controls.Clear();
                 var doc = new HtmlAgilityPack.HtmlDocument();
-                doc.Load(diry + "\\pages\\" + sp.ToString().Replace(" ", "_") + ".html");
+                doc.Load(Settings1.Default.folderpath + "\\LD_Website" + "\\pages\\" + sp.ToString().Replace(" ", "_") + ".html");
                 int getItems = 1;
                 textBoxList.Clear();
                 while (doc?.GetElementbyId("i" + getItems.ToString())?.InnerText != null)
@@ -328,7 +328,6 @@ namespace Local_documentation
             var settingsmenu = new Form2();
             settingsmenu.ShowDialog();
             string diry = Settings1.Default.folderpath + "\\LD_Website";
-            string[] fileEntries;
             diry += "\\pages";
             pageList.Items.Clear();
             pageContents.Controls.Clear();
@@ -337,14 +336,13 @@ namespace Local_documentation
             pageList.SelectedIndex = -1;
             try
             {
-                fileEntries = Directory.GetFiles(diry);
                 webnamelabel.Text = Settings1.Default.title;
                 webnamelabel.ForeColor = Color.White;
                 startnewform();
             }
             catch (Exception ex)
             {
-                fileEntries = new string[1] { " " };
+               
                 webnamelabel.Text = "create your website or select folder from settings";
                 webnamelabel.ForeColor = Color.Red;
             }
@@ -354,24 +352,55 @@ namespace Local_documentation
 
         private void removebutton_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("could not find itttt");
-            var doc = new HtmlAgilityPack.HtmlDocument();
 
-            Debug.WriteLine("could not find itttttttt");
-            doc.Load(Settings1.Default.folderpath + "\\LD_Website\\index.html");
-            var liNode = doc.DocumentNode.SelectSingleNode("//li[text()='" + selectedPage + "']");
-            Debug.WriteLine("could not find it");
-            liNode.Remove();
-            Debug.WriteLine("could not find it!");
-            FileStream sww = new FileStream(Settings1.Default.folderpath + "\\LD_Website\\index.html", FileMode.Create);
-            doc.Save(sww);
-            sww.Close();
-            File.Delete(Settings1.Default.folderpath + "\\LD_Website\\pages\\" + selectedPage + ".html");
-            pageList.Items.Clear();
-            pageContents.Controls.Clear();
-            startnewform();
-            selectedPage = "";
-            pageList.SelectedIndex = -1;
+            static DialogResult removeconfirmbox(string title, string promptText, string pagename)
+            {
+                Form form = new Form();
+                Label label = new Label();
+                Button buttonOk = new Button();
+                Button buttonCancel = new Button();
+                form.Text = "Removing an item";
+                label.Text = "Are you sure you want to remove - " + pagename +" - ?";
+                buttonOk.Text = "OK";
+                buttonCancel.Text = "Cancel";
+                buttonOk.DialogResult = DialogResult.OK;
+                buttonCancel.DialogResult = DialogResult.Cancel;
+                label.SetBounds(36, 36, 372, 13);
+                buttonOk.SetBounds(228, 160, 160, 60);
+                buttonCancel.SetBounds(400, 160, 160, 60);
+                label.AutoSize = true;
+                form.ClientSize = new Size(796, 307);
+                form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                form.StartPosition = FormStartPosition.CenterScreen;
+                form.MinimizeBox = false;
+                form.MaximizeBox = false;
+                form.Controls.AddRange(new Control[] { label, buttonOk, buttonCancel });
+                form.AcceptButton = buttonOk;
+                form.CancelButton = buttonCancel;
+                DialogResult dialogResult = form.ShowDialog();
+                return dialogResult;
+            }
+            if (removeconfirmbox("Dialog Box", "Are you sure you want to remove this item?", selectedPage) == DialogResult.OK) {
+                Debug.WriteLine("could not find itttt");
+                var doc = new HtmlAgilityPack.HtmlDocument();
+
+                Debug.WriteLine("could not find itttttttt");
+                doc.Load(Settings1.Default.folderpath + "\\LD_Website\\index.html");
+                var liNode = doc.DocumentNode.SelectSingleNode("//li[a[@href='./pages/" + selectedPage + ".html']]");
+                Debug.WriteLine("could not find it");
+                liNode.Remove();
+                Debug.WriteLine("could not find it!");
+                FileStream sww = new FileStream(Settings1.Default.folderpath + "\\LD_Website\\index.html", FileMode.Create);
+                doc.Save(sww);
+                sww.Close();
+                File.Delete(Settings1.Default.folderpath + "\\LD_Website\\pages\\" + selectedPage + ".html");
+                pageList.Items.Clear();
+                pageContents.Controls.Clear();
+                startnewform();
+                selectedPage = "";
+                pageList.SelectedIndex = -1;
+            }
+
         }
     }
 }
