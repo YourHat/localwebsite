@@ -158,7 +158,7 @@ namespace Local_documentation
                     textBoxList.Add(new TextBox());
                     textBoxList.Last().Text = doc.GetElementbyId("i" + getItems.ToString()).InnerText;
                     textBoxList.Add(new TextBox());
-                    textBoxList.Last().Text = doc.GetElementbyId("i" + getItems.ToString() + "c").InnerText;
+                    textBoxList.Last().Text = doc.GetElementbyId("i" + getItems.ToString() + "c").InnerHtml.Replace("<br>","\r\n");
                     getItems++;
                 }
                 // creates textbox for each element in the html docuemnt
